@@ -4,33 +4,67 @@ from tkinter import *
 import graph
 
 window = tkinter.Tk()
-window.title("GUI")
+window.title("Area Visualization")
 
-STARTRANGE = 0
+STARTRANGE = None
 ENDRANGE = 15
 N = 20
-DRAWTYPE = True # true means rectangle false means trapezoid
-def runGraph(STARTRANGE,ENDRANGE,N):
-    graph.draw(STARTRANGE,ENDRANGE,N)
+DRAWTYPE = None # true means rectangle false means trapezoid
+def runGraph(STARTRANGE,ENDRANGE,N,DRAWTYPE):
+    if( retrieve_n() != False):
+        graph.draw(STARTRANGE,ENDRANGE,N,DRAWTYPE)
+    else:
+        print(777)
+    
 
 def isRiemannCheck():
+    global DRAWTYPE
     DRAWTYPE = True
+    print(DRAWTYPE)
     isTrapezoidCheck.deselect()
 
 def isTrapezoidCheck():
+    global DRAWTYPE
     DRAWTYPE = False
+    print(DRAWTYPE)
     isRiemannCheck.deselect()
 
-graphButton = tkinter.Button(window, text = "Graph", command = lambda: runGraph(STARTRANGE,ENDRANGE,N))
-graphButton.grid(row = 1, column = 0, pady = 2)
+def retrieve_n():
+    global STARTRANGE
+    STARTRANGE = startRangeEntry.get()
+    try: STARTRANGE = int(STARTRANGE)
+    except ValueError :
+        return False
 
-e1 = Entry(window)
-e1.grid(row=0, column = 0,sticky = W,pady = 2)
+fxText = Label(window, text = "Function")
+startRangeText = Label(window, text = "Start Range")
+endRangeText = Label(window, text = "End Range")
+nText = Label(window, text = "N")   
+
+fxText.grid(row = 0,column = 0)
+startRangeText.grid(row = 1,column = 0)
+endRangeText.grid(row = 2,column = 0)
+nText.grid(row =3,column = 0)
+
+graphButton = tkinter.Button(window, text = "Graph", command = lambda: runGraph(STARTRANGE,ENDRANGE,N,DRAWTYPE))
+graphButton.grid(row = 4, column = 1, pady = 2)
+
+startRangeEntry = Entry(window)
+endRangeEntry = Entry(window)
+nEntry = Entry(window)
+fxEntry = Entry(window)
+
+fxEntry.grid(row=0, column = 1,sticky = W,pady = 2)
+startRangeEntry.grid(row=1, column = 1,sticky = W,pady = 2)
+endRangeEntry.grid(row=2,column = 1,stick = W,pady = 2)
+nEntry.grid(row=3,column = 1,stick = W,pady = 2)
+
 
 isRiemannCheck = Checkbutton(window, text = "Riemann", command=isRiemannCheck)
 isTrapezoidCheck = Checkbutton(window, text = "Trapezoid", command=isTrapezoidCheck)
-isRiemannCheck.grid(row = 0, column = 1,sticky = W,pady = 2)
-isTrapezoidCheck.grid(row = 1, column = 1,sticky = W,pady = 2)
+
+isRiemannCheck.grid(row = 0, column = 3,sticky = W,pady = 2)
+isTrapezoidCheck.grid(row = 1, column = 3,sticky = W,pady = 2)
 
 
 window.mainloop()

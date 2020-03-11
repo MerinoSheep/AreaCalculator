@@ -4,13 +4,12 @@ import numpy
 import math
 
 
-def draw(STARTRANGE,ENDRANGE,N):
+def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE):
     ENDRANGE += .1
     xValEquation = []
     yValEquation = []
     xValSum = []
     yValSum = []
-    
     RSUMTYPE = "LEFT" #MIDDLE,LEFT,OR RIGHT
     # The y values for the riemman sum will be stored here
     
