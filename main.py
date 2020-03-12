@@ -45,20 +45,25 @@ fxText = Label(window, text = "Function")
 startRangeText = Label(window, text = "Start Range")
 endRangeText = Label(window, text = "End Range")
 nText = Label(window, text = "N")   
+
 #Initialize Labels to grid
 fxText.grid(row = 0,column = 0)
 startRangeText.grid(row = 1,column = 0)
 endRangeText.grid(row = 2,column = 0)
 nText.grid(row =3,column = 0)
+
 #Graph Button
 graphButton = tkinter.Button(window, text = "Graph", command = lambda: runGraph(ENDRANGE,N,DRAWTYPE))
+
 #Initialize Buttons
 graphButton.grid(row = 4, column = 1, pady = 2)
+
 #Text Entry Fields
 startRangeEntry = Entry(window)
 endRangeEntry = Entry(window)
 nEntry = Entry(window)
 fxEntry = Entry(window)
+
 #Initialize Text Entry Fields to 
 fxEntry.grid(row=0, column = 1,sticky = W,pady = 2)
 startRangeEntry.grid(row=1, column = 1,sticky = W,pady = 2)
