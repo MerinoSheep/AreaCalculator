@@ -6,15 +6,16 @@ import graph
 window = tkinter.Tk()
 window.title("Area Visualization")
 
-STARTRANGE = None
+STARTRANGE = 0
 ENDRANGE = 15
 N = 20
 DRAWTYPE = None # true means rectangle false means trapezoid
 def runGraph(STARTRANGE,ENDRANGE,N,DRAWTYPE):
-    if( retrieve_n() != False):
+    status, STARTRANGE =  retrieve_n()
+    if status:
         graph.draw(STARTRANGE,ENDRANGE,N,DRAWTYPE)
     else:
-        print(777)
+        print(STARTRANGE)
     
 
 def isRiemannCheck():
@@ -30,11 +31,15 @@ def isTrapezoidCheck():
     isRiemannCheck.deselect()
 
 def retrieve_n():
-    global STARTRANGE
-    STARTRANGE = startRangeEntry.get()
-    try: STARTRANGE = int(STARTRANGE)
+    print("retrieve_n()")
+    try: 
+        strtRange = float(startRangeEntry.get())
     except ValueError :
-        return False
+        return False, 0
+    except TypeError :
+        return False, 0
+    return True, strtRange
+
 
 fxText = Label(window, text = "Function")
 startRangeText = Label(window, text = "Start Range")

@@ -10,7 +10,7 @@ def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE):
     yValEquation = []
     xValSum = []
     yValSum = []
-    RSUMTYPE = "LEFT" #MIDDLE,LEFT,OR RIGHT
+    RSUMTYPE = "RIGHT" #MIDDLE,LEFT,OR RIGHT
     # The y values for the riemman sum will be stored here
     
     def equation(i):
