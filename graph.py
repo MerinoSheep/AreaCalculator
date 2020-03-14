@@ -4,25 +4,26 @@ import numpy
 import math
 
 
-def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE):
+def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx):
     ENDRANGE += .1
     xValEquation = []
     yValEquation = []
     xValSum = []
     yValSum = []
-    RSUMTYPE = "RIGHT" #MIDDLE,LEFT,OR RIGHT
+    RSUMTYPE = "LEFT" #MIDDLE,LEFT,OR RIGHT
     # The y values for the riemman sum will be stored here
     
     def equation(i):
-        return math.cos(i)
-
+        x=i
+        return eval(fx)
     fig, ax = plt.subplots()
     currentAxis = plt.gca()
     deltaX = (ENDRANGE-.1)-STARTRANGE
 
     for i in numpy.arange(STARTRANGE, ENDRANGE, .1): # Two arrays are stored, one for x values of the equation and another for the y values
+        x=i
         xValEquation.append(i)
-        yValEquation.append(equation(i))
+        yValEquation.append(eval(fx)) 
 
     if(RSUMTYPE == "LEFT" and DRAWTYPE ):
         for i in numpy.arange(STARTRANGE, ENDRANGE-.1, (deltaX/N)):  # LEFT RIEMANN SUMS

@@ -2,20 +2,26 @@ import os
 import tkinter
 from tkinter import * 
 import graph
-
+from math import *
+import compile ##need to download
+import ast
 window = tkinter.Tk()
 window.title("Area Visualization")
 
-STARTRANGE = 0
-ENDRANGE = 15
-N = 20
-DRAWTYPE = None # true means rectangle false means trapezoid
-def runGraph(STARTRANGE,ENDRANGE,N,DRAWTYPE):
-    status, STARTRANGE =  retrieve_n()
-    if status:
-        graph.draw(STARTRANGE,ENDRANGE,N,DRAWTYPE)
+STARTRANGE = None
+ENDRANGE = None
+N = 20 
+DRAWTYPE = True # true means rectangle false means trapezoid
+def runGraph():
+    statusS, STARTRANGE =  retrieve_strt()
+    statusE, ENDRANGE= retrieveEnd()
+    status_n, N = retrieve_n()
+    fx = retrieve_fx()
+    if statusS and statusE and status_n:
+        if(ENDRANGE>STARTRANGE):
+            graph.draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx)
     else:
-        print(STARTRANGE)
+        print("incorrect")
     
 
 def isRiemannCheck():
@@ -30,15 +36,30 @@ def isTrapezoidCheck():
     print(DRAWTYPE)
     isRiemannCheck.deselect()
 
-def retrieve_n():
-    print("retrieve_n()")
+def retrieve_strt():
     try: 
         strtRange = float(startRangeEntry.get())
     except ValueError :
         return False, 0
-    except TypeError :
-        return False, 0
     return True, strtRange
+
+def retrieveEnd():
+    try: 
+        endRange = float(endRangeEntry.get())
+    except ValueError :
+        return False, 0
+    return True, endRange
+
+def retrieve_n():
+    try: 
+        n = float(nEntry.get())
+    except ValueError :
+        return False, 0
+    return True, n
+
+def retrieve_fx():
+    fx = fxEntry.get()
+    return fx
 
 
 fxText = Label(window, text = "Function")
@@ -51,7 +72,7 @@ startRangeText.grid(row = 1,column = 0)
 endRangeText.grid(row = 2,column = 0)
 nText.grid(row =3,column = 0)
 
-graphButton = tkinter.Button(window, text = "Graph", command = lambda: runGraph(STARTRANGE,ENDRANGE,N,DRAWTYPE))
+graphButton = tkinter.Button(window, text = "Graph",command =  runGraph)
 graphButton.grid(row = 4, column = 1, pady = 2)
 
 startRangeEntry = Entry(window)
