@@ -1,17 +1,13 @@
-import os
-import tkinter
 from tkinter import * 
+from tkinter import ttk
 import graph
-from math import *
-import compile ##need to download
-import ast
-window = tkinter.Tk()
-window.title("Area Visualization")
+
 
 STARTRANGE = None
 ENDRANGE = None
 N = 20 
 DRAWTYPE = True # true means rectangle false means trapezoid
+
 def runGraph():
     statusS, STARTRANGE =  retrieve_strt()
     statusE, ENDRANGE= retrieveEnd()
@@ -19,7 +15,7 @@ def runGraph():
     fx = retrieve_fx()
     if statusS and statusE and status_n:
         if(ENDRANGE>STARTRANGE):
-            graph.draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx)
+            graph.draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx,menu.get().upper())
     else:
         print("incorrect")
     
@@ -61,6 +57,8 @@ def retrieve_fx():
     fx = fxEntry.get()
     return fx
 
+window = Tk()
+window.title("Area Visualization")
 
 fxText = Label(window, text = "Function")
 startRangeText = Label(window, text = "Start Range")
@@ -69,11 +67,12 @@ nText = Label(window, text = "N")
 
 #Initialize Labels to grid
 fxText.grid(row = 0,column = 0)
+
 startRangeText.grid(row = 1,column = 0)
 endRangeText.grid(row = 2,column = 0)
 nText.grid(row =3,column = 0)
 
-graphButton = tkinter.Button(window, text = "Graph",command =  runGraph)
+graphButton = Button(window, text = "Graph",command =  runGraph)
 graphButton.grid(row = 4, column = 1, pady = 2)
 
 #Text Entry Fields
@@ -88,6 +87,12 @@ startRangeEntry.grid(row=1, column = 1,sticky = W,pady = 2)
 endRangeEntry.grid(row=2,column = 1,stick = W,pady = 2)
 nEntry.grid(row=3,column = 1,stick = W,pady = 2)
 
+options = ["LEFT","RIGHT","MIDDLE"]
+splash = StringVar(window)
+splash.set("Riemman Draw Location")
+#Combobox
+menu = ttk.Combobox(window,textvariable = splash,values =["Left","Right","Middle"],state = "readonly")
+menu.grid(row = 3, column = 3,sticky = EW,pady = 2,)
 
 isRiemannCheck = Checkbutton(window, text = "Riemann", command=isRiemannCheck)
 isTrapezoidCheck = Checkbutton(window, text = "Trapezoid", command=isTrapezoidCheck)
@@ -95,5 +100,6 @@ isTrapezoidCheck = Checkbutton(window, text = "Trapezoid", command=isTrapezoidCh
 isRiemannCheck.grid(row = 0, column = 3,sticky = W,pady = 2)
 isTrapezoidCheck.grid(row = 1, column = 3,sticky = W,pady = 2)
 
-
+break_line = ttk.Separator(orient=HORIZONTAL)
+break_line.grid(row = 2, column = 3,sticky = EW,pady = 2)
 window.mainloop()

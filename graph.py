@@ -1,16 +1,16 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy
-import math
+from math import *
 
 
-def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx):
+def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx,RSUMTYPE):
     ENDRANGE += .1
     xValEquation = []
     yValEquation = []
     xValSum = []
     yValSum = []
-    RSUMTYPE = "LEFT" #MIDDLE,LEFT,OR RIGHT
+  #MIDDLE,LEFT,OR RIGHT
     # The y values for the riemman sum will be stored here
     
     def equation(i):
@@ -30,13 +30,13 @@ def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx):
             currentAxis.add_patch(patches.Rectangle(
                 (i, 0), (deltaX/N), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
             #print(i)
-    elif(RSUMTYPE == "RIGHT"):
+    elif(RSUMTYPE == "RIGHT" and DRAWTYPE):
         for i in numpy.arange(ENDRANGE-.1,STARTRANGE,-(deltaX/N)):  # RIGHT RIEMANN SUMS
             currentAxis.add_patch(patches.Rectangle(
                 (i-(deltaX/N), 0), (deltaX/N), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
             #print(i)
 
-    elif(RSUMTYPE == "MIDDLE"):
+    elif(RSUMTYPE == "MIDDLE"and DRAWTYPE):
         for i in numpy.arange(STARTRANGE+(deltaX/N)/2, ENDRANGE-.1,(deltaX/N)):  # MIDDLE RIEMANN SUMS
             currentAxis.add_patch(patches.Rectangle(
                 (i-(deltaX/N)/2, 0), (deltaX/N), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
