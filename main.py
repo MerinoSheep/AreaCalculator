@@ -2,6 +2,10 @@ from tkinter import *
 from tkinter import ttk
 import graph
 
+window = Tk()
+window.title("Area Visualization")
+
+
 
 STARTRANGE = None
 ENDRANGE = None
@@ -57,8 +61,7 @@ def retrieve_fx():
     fx = fxEntry.get()
     return fx
 
-window = Tk()
-window.title("Area Visualization")
+
 
 fxText = Label(window, text = "Function")
 startRangeText = Label(window, text = "Start Range")
@@ -102,4 +105,5 @@ isTrapezoidCheck.grid(row = 1, column = 3,sticky = W,pady = 2)
 
 break_line = ttk.Separator(orient=HORIZONTAL)
 break_line.grid(row = 2, column = 3,sticky = EW,pady = 2)
+
 window.mainloop()
