@@ -66,15 +66,17 @@ def retrieve_fx():
 fxText = Label(window, text = "Function")
 startRangeText = Label(window, text = "Start Range")
 endRangeText = Label(window, text = "End Range")
-nText = Label(window, text = "N")   
+nText = Label(window, text = "N")
+error_text = Label(window,fg="red")   
 
 #Initialize Labels to grid
 fxText.grid(row = 0,column = 0)
-
 startRangeText.grid(row = 1,column = 0)
 endRangeText.grid(row = 2,column = 0)
 nText.grid(row =3,column = 0)
+error_text.grid(row = 4, column = 3)
 
+#Button
 graphButton = Button(window, text = "Graph",command =  runGraph)
 graphButton.grid(row = 4, column = 1, pady = 2)
 
