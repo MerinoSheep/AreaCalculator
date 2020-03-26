@@ -19,27 +19,33 @@ def runGraph():
     fx = retrieve_fx()
     if statusS and statusE and status_n:
         if(ENDRANGE>STARTRANGE):
-            graph.draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx,menu.get().upper())
-    else:
-        print("incorrect")
+            if(valid_fx()):
+                error_var.set('')
+                graph.draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx,menu.get().upper())
+            else:
+                error_var.set('Invalid Function')
+
     
 
 def isRiemannCheck():
     global DRAWTYPE
     DRAWTYPE = True
     print(DRAWTYPE)
+    menu.state(['!disabled'])
     isTrapezoidCheck.deselect()
 
 def isTrapezoidCheck():
     global DRAWTYPE
     DRAWTYPE = False
     print(DRAWTYPE)
+    menu.state(['disabled'])
     isRiemannCheck.deselect()
 
 def retrieve_strt():
     try: 
         strtRange = float(startRangeEntry.get())
     except ValueError :
+        error_var.set('Input a valid starting range')
         return False, 0
     return True, strtRange
 
@@ -47,6 +53,7 @@ def retrieveEnd():
     try: 
         endRange = float(endRangeEntry.get())
     except ValueError :
+        error_var.set('Input a valid end range')
         return False, 0
     return True, endRange
 
@@ -61,13 +68,25 @@ def retrieve_fx():
     fx = fxEntry.get()
     return fx
 
+def valid_fx():
+    x=0
+    try:
+        eval(retrieve_fx())
+    except(NameError,SyntaxError) as e:
+        return False
+    else:
+        return True
+    
+    
 
+
+error_var = StringVar()
 
 fxText = Label(window, text = "Function")
 startRangeText = Label(window, text = "Start Range")
 endRangeText = Label(window, text = "End Range")
 nText = Label(window, text = "N")
-error_text = Label(window,fg="red")   
+error_text = Label(window,fg="red", textvariable = error_var,font='bold')   
 
 #Initialize Labels to grid
 fxText.grid(row = 0,column = 0)

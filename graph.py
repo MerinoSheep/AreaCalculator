@@ -21,10 +21,9 @@ def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx,RSUMTYPE):
 
 
     for x in x_vals: # Two arrays are stored, one for x values of the equation and another for the y values
-
-    
         yValEquation.append(eval(fx))
 
+   
 
     #Draws Rectangles
     if(RSUMTYPE == "LEFT" and DRAWTYPE ):
