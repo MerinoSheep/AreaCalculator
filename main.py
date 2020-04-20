@@ -1,6 +1,7 @@
 from tkinter import * 
 from tkinter import ttk
 import graph
+from math import *
 
 window = Tk()
 window.title("Area Visualization")
