@@ -20,7 +20,7 @@ def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx,RSUMTYPE):
     deltaX = (ENDRANGE-.1)-STARTRANGE
 
 
-    for x in x_vals: # Two arrays are stored, one for x values of the equation and another for the y values
+    for x in x_vals: #stores the y values corresponding to the array of x values
         yValEquation.append(eval(fx))
 
    

@@ -14,7 +14,7 @@ N = 20
 DRAWTYPE = True # true means rectangle false means trapezoid
 
 def runGraph():
-    statusS, STARTRANGE =  retrieve_strt()
+    statusS, STARTRANGE =  retrieve_strt() #status is a boolean return 
     statusE, ENDRANGE= retrieveEnd()
     status_n, N = retrieve_n()
     fx = retrieve_fx()
@@ -73,16 +73,22 @@ def valid_fx():
     x=0
     try:
         eval(retrieve_fx())
-    except(NameError,SyntaxError) as e:
+    except(NameError,SyntaxError,TypeError) as e:
         return False
     else:
         return True
-    
+
+def test_val(inStr,acttyp):
+    if acttyp == '1': #insert
+        if not inStr.isdigit():
+            return False
+    return True
+
     
 
 
 error_var = StringVar()
-
+#Labels
 fxText = Label(window, text = "Function")
 startRangeText = Label(window, text = "Start Range")
 endRangeText = Label(window, text = "End Range")
@@ -100,10 +106,12 @@ error_text.grid(row = 4, column = 3)
 graphButton = Button(window, text = "Graph",command =  runGraph)
 graphButton.grid(row = 4, column = 1, pady = 2)
 
+
 #Text Entry Fields
-startRangeEntry = Entry(window)
+startRangeEntry = Entry(window, validate="key")
 endRangeEntry = Entry(window)
-nEntry = Entry(window)
+nEntry = Entry(window, validate="key")
+nEntry['validatecommand'] = (nEntry.register(test_val),'%P','%d')
 fxEntry = Entry(window)
 
 #Initialize Text Entry Fields to 
