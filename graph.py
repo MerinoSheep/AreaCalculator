@@ -18,6 +18,7 @@ def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx,RSUMTYPE):
     fig, ax = plt.subplots()
     currentAxis = plt.gca()
     deltaX = (ENDRANGE-.1)-STARTRANGE
+    rectangle_length = deltaX/N
 
 
     for x in x_vals: #stores the y values corresponding to the array of x values
@@ -27,27 +28,27 @@ def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx,RSUMTYPE):
 
     #Draws Rectangles
     if(RSUMTYPE == "LEFT" and DRAWTYPE ):
-        for i in np.arange(STARTRANGE, ENDRANGE-.1, (deltaX/N)):  # LEFT RIEMANN SUMS
+        for i in np.arange(STARTRANGE, ENDRANGE-.1, (rectangle_length)):  # LEFT RIEMANN SUMS
             currentAxis.add_patch(patches.Rectangle(
-                (i, 0), (deltaX/N), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
+                (i, 0), (rectangle_length), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
             #print(i)
     elif(RSUMTYPE == "RIGHT" and DRAWTYPE):
-        for i in np.arange(ENDRANGE-.1,STARTRANGE,-(deltaX/N)):  # RIGHT RIEMANN SUMS
+        for i in np.arange(ENDRANGE-.1,STARTRANGE,-(rectangle_length)):  # RIGHT RIEMANN SUMS
             currentAxis.add_patch(patches.Rectangle(
-                (i-(deltaX/N), 0), (deltaX/N), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
+                (i-(rectangle_length), 0), (rectangle_length), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
             #print(i)
 
     elif(RSUMTYPE == "MIDDLE"and DRAWTYPE):
-        for i in np.arange(STARTRANGE+(deltaX/N)/2, ENDRANGE-.1,(deltaX/N)):  # MIDDLE RIEMANN SUMS
+        for i in np.arange(STARTRANGE+(rectangle_length)/2, ENDRANGE-.1,(rectangle_length)):  # MIDDLE RIEMANN SUMS
             currentAxis.add_patch(patches.Rectangle(
-                (i-(deltaX/N)/2, 0), (deltaX/N), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
+                (i-(rectangle_length)/2, 0), (rectangle_length), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
             print(i)
 
     if(not DRAWTYPE): ## TRAPEZOID
 
-        for i in np.arange(STARTRANGE, ENDRANGE-.1, (deltaX/N)):
-            x=[i,i+deltaX/N,i+deltaX/N,i,] #BL,BR,TR, TL
-            y=[0,0,equation(i+deltaX/N),equation(i)]
+        for i in np.arange(STARTRANGE, ENDRANGE-.1, (rectangle_length)):
+            x=[i,i+rectangle_length,i+rectangle_length,i,] #BL,BR,TR, TL order of how nump draws the polygons 
+            y=[0,0,equation(i+rectangle_length),equation(i)]
             currentAxis.add_patch(patches.Polygon(xy=list(zip(x,y)),fill= False, linewidth=1, edgecolor='r', facecolor='none'))
     # print(x_vals)
     plt.plot(x_vals, yValEquation)
@@ -57,4 +58,4 @@ def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx,RSUMTYPE):
     plt.show()
 
 if __name__ == "__main__":
-    draw()
+    pass
