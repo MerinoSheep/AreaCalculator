@@ -2,14 +2,15 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 from math import *
-
+from math import log as ln 
+from math import log10 as log
 
 def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx,RSUMTYPE):
     ENDRANGE += .1
     x_vals = np.arange(float(STARTRANGE),ENDRANGE,.1) ## change floats later
     yValEquation = []
-    xValSum = [] ## Rectangles or Trapezoids
-    yValSum = []  ## ^
+    xValSum = [] 
+    yValSum = []  
     
     def equation(i):
         x=i
@@ -22,23 +23,25 @@ def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx,RSUMTYPE):
 
 
     for x in x_vals: #stores the y values corresponding to the array of x values
-        yValEquation.append(eval(fx))
-
+        try:
+            yValEquation.append(eval(fx))
+        except (NameError,SyntaxError):
+            return False # Stops graph 
    
 
     #Draws Rectangles
-    if(RSUMTYPE == "LEFT" and DRAWTYPE ):
+    if(RSUMTYPE == "Left" and DRAWTYPE ):
         for i in np.arange(STARTRANGE, ENDRANGE-.1, (rectangle_length)):  # LEFT RIEMANN SUMS
             currentAxis.add_patch(patches.Rectangle(
                 (i, 0), (rectangle_length), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
             #print(i)
-    elif(RSUMTYPE == "RIGHT" and DRAWTYPE):
+    elif(RSUMTYPE == "Right" and DRAWTYPE):
         for i in np.arange(ENDRANGE-.1,STARTRANGE,-(rectangle_length)):  # RIGHT RIEMANN SUMS
             currentAxis.add_patch(patches.Rectangle(
                 (i-(rectangle_length), 0), (rectangle_length), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
             #print(i)
 
-    elif(RSUMTYPE == "MIDDLE"and DRAWTYPE):
+    elif(RSUMTYPE == "Middle"and DRAWTYPE):
         for i in np.arange(STARTRANGE+(rectangle_length)/2, ENDRANGE-.1,(rectangle_length)):  # MIDDLE RIEMANN SUMS
             currentAxis.add_patch(patches.Rectangle(
                 (i-(rectangle_length)/2, 0), (rectangle_length), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
