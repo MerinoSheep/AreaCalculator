@@ -31,7 +31,6 @@ def isRiemannCheck():
     """Reverses the menu disabled from isTrapezoidCheck()"""
     global DRAWTYPE
     DRAWTYPE = True
-    # print(DRAWTYPE)
     menu.state(['!disabled'])
     isTrapezoidCheck.deselect()
 
@@ -39,7 +38,6 @@ def isTrapezoidCheck():
     """ disables the Riemann sum menu because Trapezoids only have one state"""
     global DRAWTYPE
     DRAWTYPE = False
-    # print(DRAWTYPE)
     menu.state(['disabled'])
     isRiemannCheck.deselect()
 
@@ -50,7 +48,7 @@ def retrieve_strt():
     except ValueError:
         error_var.set('Input a valid starting range')
         return False, 0
-    return True, strtRange
+    return True, strtRange  
 
 def retrieveEnd():
     try:
