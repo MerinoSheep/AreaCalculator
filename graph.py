@@ -1,66 +1,71 @@
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 import numpy as np
 from math import *
-from math import log as ln 
+from math import log as ln
 from math import log10 as log
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
-def draw(STARTRANGE,ENDRANGE,N,DRAWTYPE,fx,RSUMTYPE):
-    ENDRANGE += .1
-    x_vals = np.arange(float(STARTRANGE),ENDRANGE,.1) ## TODO change floats later
+
+def draw(start_range, end_range, N, DRAWTYPE, fx, RSUMTYPE):
+    end_range += .1
+    rect_linewidth = 1
+    # TODO change floats later
+    x_vals = np.arange(float(start_range), end_range, .1)
     yValEquation = []
-    xValSum = [] 
-    yValSum = []  
+    xValSum = []
+    yValSum = []
 
-    def equation(i):
-        x=i
+    def equation(x):  # fix later
         return eval(fx)
 
     fig, ax = plt.subplots()
     currentAxis = plt.gca()
-    deltaX = (ENDRANGE-.1)-STARTRANGE
+    deltaX = (end_range-.1)-start_range
     rectangle_length = deltaX/N
-
-
-    for x in x_vals: #stores the y values corresponding to the array of x values
+    for x in x_vals:  # stores the y values corresponding to the array of x values
         try:
             yValEquation.append(eval(fx))
-        except (NameError,SyntaxError):
-            return False # Allows main to show error
-   
+        except (NameError, SyntaxError):
+            return False  # Allows main to show error
 
-    #Draws Rectangles
-    if(RSUMTYPE == "Left" and DRAWTYPE ):
-        for i in np.arange(STARTRANGE, ENDRANGE-.1, (rectangle_length)):  # LEFT RIEMANN SUMS
+    # Draws Rectangles
+    if(RSUMTYPE == "Left" and DRAWTYPE):
+        for i in np.arange(start_range, end_range-.1, (rectangle_length)):  # LEFT RIEMANN SUMS
             currentAxis.add_patch(patches.Rectangle(
-                (i, 0), (rectangle_length), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
+                (i, 0), (rectangle_length), equation(i),
+                linewidth=rect_linewidth, edgecolor='r', facecolor='none'))
 
     elif(RSUMTYPE == "Right" and DRAWTYPE):
-        for i in np.arange(ENDRANGE-.1,STARTRANGE,-(rectangle_length)):  # RIGHT RIEMANN SUMS
+        for i in np.arange(end_range-.1, start_range, -(rectangle_length)):  # RIGHT RIEMANN SUMS
             currentAxis.add_patch(patches.Rectangle(
-                (i-(rectangle_length), 0), (rectangle_length), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
-     
+                (i-(rectangle_length), 0), (rectangle_length), equation(i), 
+                linewidth=rect_linewidth, edgecolor='r', facecolor='none'))
 
-    elif(RSUMTYPE == "Middle"and DRAWTYPE):
-        for i in np.arange(STARTRANGE+(rectangle_length)/2, ENDRANGE-.1,(rectangle_length)):  # MIDDLE RIEMANN SUMS
+    elif(RSUMTYPE == "Middle" and DRAWTYPE):
+        # MIDDLE RIEMANN SUMS
+        for i in np.arange(start_range+(rectangle_length)/2, end_range-.1, (rectangle_length)):
             currentAxis.add_patch(patches.Rectangle(
-                (i-(rectangle_length)/2, 0), (rectangle_length), equation(i), linewidth=1, edgecolor='r', facecolor='none'))
-  
+                (i-(rectangle_length)/2, 0), (rectangle_length), equation(i), 
+                linewidth=rect_linewidth, edgecolor='r', facecolor='none'))
 
-    if(not DRAWTYPE): ## TRAPEZOID
+    if(not DRAWTYPE):  # TRAPEZOID
 
-        for i in np.arange(STARTRANGE, ENDRANGE-.1, (rectangle_length)):
-            x=[i,i+rectangle_length,i+rectangle_length,i,] #BL,BR,TR, TL order of how nump draws the polygons 
-            y=[0,0,equation(i+rectangle_length),equation(i)]
-            currentAxis.add_patch(patches.Polygon(xy=list(zip(x,y)),fill= False, linewidth=1, edgecolor='r', facecolor='none'))
- 
+        for i in np.arange(start_range, end_range-.1, (rectangle_length)):
+            # BL,BR,TR, TL order of how nump draws the polygons
+            x = [i, i+rectangle_length, i+rectangle_length, i, ]
+            y = [0, 0, equation(i+rectangle_length), equation(i)]
+            currentAxis.add_patch(patches.Polygon(xy=list(zip(
+                x, y)), fill=False, linewidth=rect_linewidth, edgecolor='r', facecolor='none'))
 
-
+    ax.grid(linewidth='.25')
+    ax.set_axisbelow(True)
     plt.plot(x_vals, yValEquation)
     plt.plot(xValSum, yValSum, 'r')
     plt.ylabel('y values')
     plt.xlabel('x values')
+
     plt.show()
+
 
 if __name__ == "__main__":
     pass
