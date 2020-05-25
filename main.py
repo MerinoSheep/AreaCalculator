@@ -1,5 +1,5 @@
+'''main.py'''
 from tkinter import Tk, ttk, StringVar, Label, Button, Entry, W, EW, Checkbutton, HORIZONTAL
-from math import * # pylint: disable=unused-wildcard-import disable=wildcard-import
 import graph
 
 window = Tk()
@@ -11,22 +11,22 @@ DRAWTYPE = None
 
 
 def run_graph():
-    """Grab input from tk.entrys"""
+    '''Grab input from tk.entrys'''
     status_s, start_range = retrieve_strt()  # statuses are a boolean return
-    status_e, end_range = retrieveEnd()
-    status_n, N = retrieve_n()
+    status_e, end_range = retrieve_end()
+    status_n, n = retrieve_n()
     fx = retrieve_fx()
     if status_s and status_e and status_n:
         if end_range > start_range:
             error_var.set('')
-            if not graph.draw(start_range, end_range, N, DRAWTYPE, fx, menu.get()):
+            if not graph.draw(start_range, end_range, n, DRAWTYPE, fx, menu.get()):
                 error_var.set('Invalid Function')
         else:
             error_var.set('Invalid Function')
 
 
 def is_riemann_check():
-    """Reverses the menu disabled from is_trapezoid_check()"""
+    '''Reverses the menu disabled from is_trapezoid_check()'''
     global DRAWTYPE
     DRAWTYPE = True
     menu.state(['!disabled'])
@@ -34,7 +34,7 @@ def is_riemann_check():
 
 
 def is_trapezoid_check():
-    """ disables the Riemann sum menu because Trapezoids only have one state"""
+    ''' disables the Riemann sum menu because Trapezoids only have one state'''
     global DRAWTYPE
     DRAWTYPE = False
     menu.state(['disabled'])
@@ -42,7 +42,7 @@ def is_trapezoid_check():
 
 
 def retrieve_strt():
-    """Does some simple checks before passing strtRange to draw(*args)"""
+    '''Does some simple checks before passing strtRange to draw(*args)'''
     try:
         strt_range = float(startRangeEntry.get())
     except ValueError:
@@ -51,7 +51,8 @@ def retrieve_strt():
     return True, strt_range
 
 
-def retrieveEnd():
+def retrieve_end():
+    '''Retrieves endrange of function'''
     try:
         end_range = float(endRangeEntry.get())
     except ValueError:
@@ -61,6 +62,7 @@ def retrieveEnd():
 
 
 def retrieve_n():
+    '''Retrieves number of rectangles wanted'''
     try:
         n = float(nEntry.get())
     except ValueError:
@@ -69,12 +71,13 @@ def retrieve_n():
 
 
 def retrieve_fx():
+    '''retrieve function'''
     fx = fxEntry.get()
     return fx.lower()
 
 
 def test_val(in_str, acttyp):
-    """Forces an integer input on n input"""
+    '''Forces an integer input on n input'''
     if acttyp == '1':  # insert
         if not in_str.isdigit():
             return False

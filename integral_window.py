@@ -22,14 +22,14 @@ class IntegralWindow:
         self.lr_sum = tk.Label()
         self.lr_sum.grid(row=1, column=1)
         self.lr_sum_label.grid(row=1, column=0)
-        
+
         #right riemann sum
         self.rr_sum = tk.Label()
         self.rr_sum_label = tk.Label(text="Right Riemann Sum")
         self.rr_sum.grid(row=1, column=0)
         self.rr_sum_label.grid(row=2, column=0)
         self.rr_sum.grid(row=2, column=1)
-        
+
         #middle riemann sum
         self.mr_sum_label = tk.Label(text="Middle Riemann Sum")
         self.mr_sum = tk.Label()
@@ -47,12 +47,12 @@ class IntegralWindow:
 
         self.function = eval("lambda x:{}".format(fx))
         self.i = scipy.integrate.quad(self.function, self.startrange, self.endrange)
-        self.integrate_answer['text'] = str(self.i[0])    
+        self.integrate_answer['text'] = str(self.i[0])
         # left riemann sum
-        self.lr_sum['text'] =riemann(self,self.startrange, self.endrange, self.n, self.fx, self.width)    
+        self.lr_sum['text'] =riemann(self,self.startrange, self.endrange, self.n, self.fx, self.width)
         # right riemann sum
         self.rr_sum['text']=riemann(self,
-            endrange, startrange, N, fx, self.width)        
+            endrange, startrange, N, fx, self.width)
         # middle riemann sum
         self.mr_sum['text']=riemann(self,
             startrange+self.width/2, (endrange+self.width/2), N, fx, self.width)
@@ -72,14 +72,14 @@ def riemann(self,startrange, endrange, N, fx, width):
 
 def trapezoid(self,fx):
     #print(self.width)
-    points = np.arange(self.startrange, self.endrange,self.width)
-    points = np.append(points,self.endrange)
+    points = np.arange(self.startrange, self.endrange, self.width)
+    points = np.append(points, self.endrange)
     print(points)
     func_points = []
     for i in points:
-        func_points.append(f(self,i, fx))
+        func_points.append(f(self, i, fx))
     #print(func_points)
-    ans = np.trapz(func_points,dx=self.width)
+    ans = np.trapz(func_points, dx=self.width)
     return ans
 
 def f(self,x, fx):
@@ -88,7 +88,7 @@ def f(self,x, fx):
 
 
 root = tk.Tk()
-integral_window = IntegralWindow(root,0,5,10,'2*x')
+integral_window = IntegralWindow(root, 0, 5, 10,'2*x')
 #integral_window.integrate(0, 5, 10, '2*x')
 root.mainloop()
 
