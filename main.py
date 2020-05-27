@@ -73,41 +73,43 @@ class MainWindow():
 
     def validate(self):  # TODO optimize return
         '''Grab input from tk.entrys'''
-        status_s = self.val_strt()  # statuses are a boolean return
-        status_e = self.val_end()
-        status_n = self.val_n()
+        status_s, strt_val = self.val_strt()  # statuses are a boolean return
+        status_e, end_val = self.val_end()
+        status_n, n_val = self.val_n()
         fx = self.val_fx()
         if not status_s:
             self.error_var.set('Invalid Start Range')
-            return False
+            return False, []
         elif not status_e:
             self.error_var.set('Invalid End Range')
-            return False
+            return False, []
         elif not status_n:
             self.error_var.set("Invalid N")
-            return False
+            return False, []
         elif not fx:
             self.error_var.set("Invalid Function")
-            return False
+            return False, []
         elif int(self.startRangeEntry.get()) > int(self.endRangeEntry.get()):
             self.error_var.set("Invalid Range")
-            return False
-        return True
+            return False, []
+        return True, [strt_val, end_val, n_val, fx]
 
     def run_graph(self):
         '''Grab input from tk.entrys'''
-        if self.validate():
+        is_good, argum = self.validate()
+        print(argum)
+        if is_good:
             self.error_var.set('')
-            graph.draw(float(self.startRangeEntry.get()), float(self.endRangeEntry.get()), int(self.nEntry.get()),
-                       self.draw_type, self.fxEntry.get(), self.menu.get())
+            graph.draw(*argum, self.draw_type, self.menu.get())
             # error_var.set('Invalid Function')
-
+        else:
+            self.error_var.set("Invalid Parameter")
     def run_calculate(self):
         '''Runs integral root'''
-
-        integral_window.IntegralWindow(
-            0, 5, 4, '2*x')
-
+        is_good, argum = self.validate()
+        if is_good:
+            print(argum)
+            integral_window.IntegralWindow(*argum)
     def is_riemann_check(self):
         '''Reverses the menu disabled from is_trapezoid_check()'''
         self.draw_type = True
@@ -126,9 +128,9 @@ class MainWindow():
             strt_range = float(self.startRangeEntry.get())
         except ValueError:
             # self.error_var.set('Input a valid starting range')
-            return False
+            return False, None
         else:
-            return True
+            return True, strt_range
 
     def val_end(self):
         '''Retrieves endrange of function'''
@@ -136,23 +138,29 @@ class MainWindow():
             end_range = float(self.endRangeEntry.get())
         except ValueError:
             # self.error_var.set('Input a valid end range')
-            return False
+            return False, None
         else:
-            return True,
+            return True, end_range
 
     def val_n(self):
-        '''Retrieves number of rectangles wanted'''
+        '''Retrieves and validates number of rectangles wanted'''
         try:
-            n = float(self.nEntry.get())
+            n = int(self.nEntry.get())
         except ValueError:
-            return False
+            return False, None
         else:
-            return True
+            return True, n
 
     def val_fx(self):
         '''retrieve function'''
-        fx = self.fxEntry.get()
-        return fx.lower()
+        temp_fx = self.fxEntry.get().lower().replace("^", "**")
+        fx =''
+        for i in range(0,len(temp_fx)-1):
+            fx += temp_fx[i]
+            if temp_fx[i].isdigit() and temp_fx[i+1]=='x':
+                fx += '*'
+        fx += temp_fx[-1]
+        return fx
 
     def test_val(self, in_str, acttyp):
         '''Forces an integer input on n input'''

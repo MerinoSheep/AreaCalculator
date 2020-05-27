@@ -8,7 +8,7 @@ import matplotlib.patches as patches
 import numpy as np
 
 
-def draw(start_range, end_range, N, drawtype, fx, RSUMTYPE):
+def draw(start_range, end_range, N, fx, drawtype, RSUMTYPE):
     """Starts graphing equation with sum"""
     end_range += .1
     rect_linewidth = 1
@@ -21,6 +21,7 @@ def draw(start_range, end_range, N, drawtype, fx, RSUMTYPE):
         return eval(fx)
 
     fig, ax = plt.subplots()
+    del fig
     current_axis = plt.gca()
     delta_x = (end_range-.1)-start_range
     rectangle_length = delta_x/N

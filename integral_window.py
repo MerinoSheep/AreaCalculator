@@ -1,3 +1,6 @@
+from math import *  # pylint: disable=unused-wildcard-import disable=wildcard-import
+from math import log as ln  # pylint: disable=unused-import
+from math import log10 as log  # pylint: disable=unused-import
 import tkinter as tk
 import scipy.integrate
 import numpy as np
@@ -9,7 +12,7 @@ class IntegralWindow(tk.Toplevel):
         tk.Toplevel.__init__(self)
         #self.master =master
         self.title("windowdd")
-        self.geometry("200x180")
+        self.geometry("300x180")
         self.startrange = startrange
         self.endrange = endrange
         self.n = n
@@ -80,7 +83,7 @@ class IntegralWindow(tk.Toplevel):
         # print(self.width)
         points = np.arange(self.startrange, self.endrange, self.width)
         points = np.append(points, self.endrange)
-        print(points)
+        #print(points)
         func_points = []
         for i in points:
             func_points.append(self.func(i, fx))
