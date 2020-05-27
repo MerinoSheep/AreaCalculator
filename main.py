@@ -1,17 +1,19 @@
 '''main.py'''
 # TODO limit eval
-from tkinter import Checkbutton, Tk, ttk, StringVar, Label, Button, Entry, W, EW,  HORIZONTAL, Toplevel, Frame
+from tkinter import Checkbutton, Tk, ttk, StringVar, Label, Button, Entry, W, EW, HORIZONTAL, Frame
 import graph
 import integral_window
 
 
-DRAWTYPE = None
 
-class MainWindow:
-    def __init__(self, master):
-        #Frame.__init__(self, master)
+
+
+class MainWindow():
+    '''Parent window'''
+    def __init__(self,master):
         self.master = master
         self.error_var = StringVar()
+        self.draw_type = None
         # Labels
         self.fxText = Label(self.master, text="Function")
         self.startRangeText = Label(self.master, text="Start Range")
@@ -32,14 +34,14 @@ class MainWindow:
             self.master, text="Graph", command=self.run_graph)
         self.graphButton.grid(row=4, column=1, pady=2)
         self.calculate_button = Button(
-            self.master, text="Calculate", command= self.run_calculate)
+            self.master, text="Calculate", command=self.run_calculate)
         self.calculate_button.grid(row=4, column=0, pady=2)
         # Text Entry Fields
         self.startRangeEntry = Entry(self.master, validate="key")
         self.endRangeEntry = Entry(self.master)
         self.nEntry = Entry(self.master, validate="key")
         self.nEntry['validatecommand'] = (
-            self.nEntry.register(test_val), '%P', '%d')
+            self.nEntry.register(self.test_val), '%P', '%d')
         self.fxEntry = Entry(self.master)
 
         # Initialized to Grid
@@ -57,99 +59,107 @@ class MainWindow:
         self.menu.grid(row=3, column=3, sticky=EW, pady=2,)
 
         # CheckButton
-        self.is_riemann_check = Checkbutton(
+        self.is_riemann_check_box = Checkbutton(
             self.master, text="Riemann", command=self.is_riemann_check)
-        self.is_trapezoid_check = Checkbutton(
+        self.is_trapezoid_check_box = Checkbutton(
             self.master, text="Trapezoid", command=self.is_trapezoid_check)
         # Initialized
-        self.is_riemann_check.grid(row=0, column=3, sticky=W, pady=2)
-        self.is_trapezoid_check.grid(row=1, column=3, sticky=W, pady=2)
+        self.is_riemann_check_box.grid(row=0, column=3, sticky=W, pady=2)
+        self.is_trapezoid_check_box.grid(row=1, column=3, sticky=W, pady=2)
 
         # Breakline
         self.break_line = ttk.Separator(orient=HORIZONTAL)
         self.break_line.grid(row=2, column=3, sticky=EW, pady=2)
 
+    def validate(self):  # TODO optimize return
+        '''Grab input from tk.entrys'''
+        status_s = self.val_strt()  # statuses are a boolean return
+        status_e = self.val_end()
+        status_n = self.val_n()
+        fx = self.val_fx()
+        if not status_s:
+            self.error_var.set('Invalid Start Range')
+            return False
+        elif not status_e:
+            self.error_var.set('Invalid End Range')
+            return False
+        elif not status_n:
+            self.error_var.set("Invalid N")
+            return False
+        elif not fx:
+            self.error_var.set("Invalid Function")
+            return False
+        elif int(self.startRangeEntry.get()) > int(self.endRangeEntry.get()):
+            self.error_var.set("Invalid Range")
+            return False
+        return True
 
     def run_graph(self):
         '''Grab input from tk.entrys'''
-        status_s, start_range = self.retrieve_strt()  # statuses are a boolean return
-        status_e, end_range = self.retrieve_end()
-        status_n, n = self.retrieve_n()
-        fx = self.retrieve_fx()
-        if status_s and status_e and status_n:
-            if end_range > start_range:
-                self.error_var.set('')
-                graph.draw(start_range, end_range, n,
-                        DRAWTYPE, fx, self.menu.get())
-                #error_var.set('Invalid Function')
-            else:
-                self.error_var.set('Invalid Function')
-
+        if self.validate():
+            self.error_var.set('')
+            graph.draw(float(self.startRangeEntry.get()), float(self.endRangeEntry.get()), int(self.nEntry.get()),
+                       self.draw_type, self.fxEntry.get(), self.menu.get())
+            # error_var.set('Invalid Function')
 
     def run_calculate(self):
         '''Runs integral root'''
-        #t = Toplevel()
-        #t.title("Hello")
-        integral = integral_window.IntegralWindow(
+
+        integral_window.IntegralWindow(
             0, 5, 4, '2*x')
 
     def is_riemann_check(self):
         '''Reverses the menu disabled from is_trapezoid_check()'''
-        global DRAWTYPE
-        DRAWTYPE = True
+        self.draw_type = True
         self.menu.state(['!disabled'])
-        self.is_trapezoid_check.deselect()
-
+        self.is_trapezoid_check_box.deselect()
 
     def is_trapezoid_check(self):
         ''' disables the Riemann sum menu because Trapezoids only have one state'''
-        global DRAWTYPE
-        DRAWTYPE = False
+        self.draw_type = False
         self.menu.state(['disabled'])
-        self.is_riemann_check.deselect()
+        self.is_riemann_check_box.deselect()
 
-
-    def retrieve_strt(self):
-        '''Does some simple checks before passing strtRange to draw(*args)'''
+    def val_strt(self):
+        '''Does some simple checks before returning a boolean'''
         try:
             strt_range = float(self.startRangeEntry.get())
         except ValueError:
-            self.error_var.set('Input a valid starting range')
-            return False, 0
-        return True, strt_range
+            # self.error_var.set('Input a valid starting range')
+            return False
+        else:
+            return True
 
-
-    def retrieve_end(self):
+    def val_end(self):
         '''Retrieves endrange of function'''
         try:
             end_range = float(self.endRangeEntry.get())
         except ValueError:
-            self.error_var.set('Input a valid end range')
-            return False, 0
-        return True, end_range
+            # self.error_var.set('Input a valid end range')
+            return False
+        else:
+            return True,
 
-
-    def retrieve_n(self):
+    def val_n(self):
         '''Retrieves number of rectangles wanted'''
         try:
             n = float(self.nEntry.get())
         except ValueError:
-            return False, 0
-        return True, n
+            return False
+        else:
+            return True
 
-
-    def retrieve_fx(self):
+    def val_fx(self):
         '''retrieve function'''
         fx = self.fxEntry.get()
         return fx.lower()
 
-
-def test_val(in_str, acttyp):
-    '''Forces an integer input on n input'''
-    if acttyp == '1':  # insert
-        if not in_str.isdigit():
-            return False
-    return True
+    def test_val(self, in_str, acttyp):
+        '''Forces an integer input on n input'''
+        if acttyp == '1':  # insert
+            if not in_str.isdigit():
+                return False
+        return True
 
 
 if __name__ == "__main__":
