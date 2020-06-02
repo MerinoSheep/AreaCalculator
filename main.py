@@ -1,54 +1,51 @@
 '''main.py'''
 # TODO limit eval
-from tkinter import Checkbutton, Tk, ttk, StringVar, Label, Button, Entry, W, EW, HORIZONTAL, Frame
+from tkinter import Checkbutton, Tk, ttk, StringVar, Label, Button, Entry, W, EW, HORIZONTAL
 import graph
 import integral_window
 
 
-
-
-
 class MainWindow():
     '''Parent window'''
-    def __init__(self,master):
+    def __init__(self, master):
         self.master = master
         self.error_var = StringVar()
         self.draw_type = None
         # Labels
-        self.fxText = Label(self.master, text="Function")
-        self.startRangeText = Label(self.master, text="Start Range")
-        self.endRangeText = Label(self.master, text="End Range")
-        self.nText = Label(self.master, text="N")
+        self.fx_text = Label(self.master, text="Function")
+        self.start_range_text = Label(self.master, text="Start Range")
+        self.end_range_text = Label(self.master, text="End Range")
+        self.n_text = Label(self.master, text="N")
         self.error_text = Label(
             self.master, fg="red", textvariable=self.error_var, font='bold')
 
         # Initialize Labels to grid
-        self.fxText.grid(row=0, column=0)
-        self.startRangeText.grid(row=1, column=0)
-        self.endRangeText.grid(row=2, column=0)
-        self.nText.grid(row=3, column=0)
+        self.fx_text.grid(row=0, column=0)
+        self.start_range_text.grid(row=1, column=0)
+        self.end_range_text.grid(row=2, column=0)
+        self.n_text.grid(row=3, column=0)
         self.error_text.grid(row=4, column=3)
 
         # Button
-        self.graphButton = Button(
+        self.graph_button = Button(
             self.master, text="Graph", command=self.run_graph)
-        self.graphButton.grid(row=4, column=1, pady=2)
+        self.graph_button.grid(row=4, column=1, pady=2)
         self.calculate_button = Button(
             self.master, text="Calculate", command=self.run_calculate)
         self.calculate_button.grid(row=4, column=0, pady=2)
         # Text Entry Fields
-        self.startRangeEntry = Entry(self.master, validate="key")
-        self.endRangeEntry = Entry(self.master)
-        self.nEntry = Entry(self.master, validate="key")
-        self.nEntry['validatecommand'] = (
-            self.nEntry.register(self.test_val), '%P', '%d')
-        self.fxEntry = Entry(self.master)
+        self.start_range_entry = Entry(self.master, validate="key")
+        self.end_range_entry = Entry(self.master)
+        self.n_entry = Entry(self.master, validate="key")
+        self.n_entry['validatecommand'] = (
+            self.n_entry.register(self.test_val), '%P', '%d')
+        self.fx_entry = Entry(self.master)
 
         # Initialized to Grid
-        self.fxEntry.grid(row=0, column=1, sticky=W, pady=2)
-        self.startRangeEntry.grid(row=1, column=1, sticky=W, pady=2)
-        self.endRangeEntry.grid(row=2, column=1, stick=W, pady=2)
-        self.nEntry.grid(row=3, column=1, stick=W, pady=2)
+        self.fx_entry.grid(row=0, column=1, sticky=W, pady=2)
+        self.start_range_entry.grid(row=1, column=1, sticky=W, pady=2)
+        self.end_range_entry.grid(row=2, column=1, stick=W, pady=2)
+        self.n_entry.grid(row=3, column=1, stick=W, pady=2)
 
         self.options = ["LEFT", "RIGHT", "MIDDLE"]
         self.splash = StringVar(self.master)
@@ -76,7 +73,7 @@ class MainWindow():
         status_s, strt_val = self.val_strt()  # statuses are a boolean return
         status_e, end_val = self.val_end()
         status_n, n_val = self.val_n()
-        fx = self.val_fx()
+        status_fx, fx = self.val_fx()
         if not status_s:
             self.error_var.set('Invalid Start Range')
             return False, []
@@ -86,10 +83,10 @@ class MainWindow():
         elif not status_n:
             self.error_var.set("Invalid N")
             return False, []
-        elif not fx:
+        elif not status_fx:
             self.error_var.set("Invalid Function")
             return False, []
-        elif int(self.startRangeEntry.get()) > int(self.endRangeEntry.get()):
+        elif int(self.start_range_entry.get()) > int(self.end_range_entry.get()):
             self.error_var.set("Invalid Range")
             return False, []
         return True, [strt_val, end_val, n_val, fx]
@@ -97,10 +94,9 @@ class MainWindow():
     def run_graph(self):
         '''Grab input from tk.entrys'''
         is_good, argum = self.validate()
-        print(argum)
         if is_good:
             self.error_var.set('')
-            graph.draw(*argum, self.draw_type, self.menu.get())
+            graph.draw(*argum, self.draw_type, self.menu.get(), self) # pylint: disable=no-value-for-parameter
             # error_var.set('Invalid Function')
         else:
             self.error_var.set("Invalid Parameter")
@@ -108,8 +104,7 @@ class MainWindow():
         '''Runs integral root'''
         is_good, argum = self.validate()
         if is_good:
-            print(argum)
-            integral_window.IntegralWindow(*argum)
+            integral_window.IntegralWindow(*argum) # pylint: disable=no-value-for-parameter
     def is_riemann_check(self):
         '''Reverses the menu disabled from is_trapezoid_check()'''
         self.draw_type = True
@@ -125,7 +120,7 @@ class MainWindow():
     def val_strt(self):
         '''Does some simple checks before returning a boolean'''
         try:
-            strt_range = float(self.startRangeEntry.get())
+            strt_range = float(self.start_range_entry.get())
         except ValueError:
             # self.error_var.set('Input a valid starting range')
             return False, None
@@ -135,7 +130,7 @@ class MainWindow():
     def val_end(self):
         '''Retrieves endrange of function'''
         try:
-            end_range = float(self.endRangeEntry.get())
+            end_range = float(self.end_range_entry.get())
         except ValueError:
             # self.error_var.set('Input a valid end range')
             return False, None
@@ -145,7 +140,7 @@ class MainWindow():
     def val_n(self):
         '''Retrieves and validates number of rectangles wanted'''
         try:
-            n = int(self.nEntry.get())
+            n = int(self.n_entry.get())
         except ValueError:
             return False, None
         else:
@@ -153,14 +148,14 @@ class MainWindow():
 
     def val_fx(self):
         '''retrieve function'''
-        temp_fx = self.fxEntry.get().lower().replace("^", "**")
-        fx =''
-        for i in range(0,len(temp_fx)-1):
+        temp_fx = self.fx_entry.get().lower().replace("^", "**")
+        fx = ''
+        for i in range(0, len(temp_fx)-1):
             fx += temp_fx[i]
-            if temp_fx[i].isdigit() and temp_fx[i+1]=='x':
+            if temp_fx[i].isdigit() and (temp_fx[i+1] == 'x' or temp_fx[i+1] == '(' or temp_fx[i+1].isalpha()):
                 fx += '*'
         fx += temp_fx[-1]
-        return fx
+        return True, fx
 
     def test_val(self, in_str, acttyp):
         '''Forces an integer input on n input'''
