@@ -53,7 +53,8 @@ class IntegralWindow(Toplevel):
 
     def integrate(self, startrange, endrange, n, fx):
         '''Calls riemann and trapezoid and does integration'''
-        self.function = eval("lambda x:{}".format(fx))
+        #self.function = eval("lambda x:{}".format(fx))
+        self.function = eval(f"lambda x:{fx}")
         self.i = scipy.integrate.quad(
             self.function, self.startrange, self.endrange)
         self.integrate_answer['text'] = str(self.i[0])
@@ -80,6 +81,7 @@ class IntegralWindow(Toplevel):
         func_points = np.asarray(func_points)
         indv_area = func_points*width
         return np.sum(indv_area)
+
     def trapezoid(self, fx):
         '''returns sum of area using trapezoids'''
         points = np.arange(self.startrange, self.endrange, self.width)
