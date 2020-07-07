@@ -8,7 +8,7 @@ import matplotlib.patches as patches
 import numpy as np
 
 
-def draw(start_range, end_range, N, fx, drawtype, RSUMTYPE, gui):
+def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: bool, RSUMTYPE: str, gui: object):
     """Starts graphing equation with sum"""
     end_range += .1
     rect_linewidth = 1
@@ -33,6 +33,7 @@ def draw(start_range, end_range, N, fx, drawtype, RSUMTYPE, gui):
         return True
     if is_in_bounds(gui):
         fig, ax = plt.subplots()
+        del fig
         current_axis = plt.gca()
         # Draws Rectangles
         if drawtype is not None and drawtype:

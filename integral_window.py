@@ -4,11 +4,12 @@ from math import log10 as log  # pylint: disable=unused-import
 from tkinter import Label, Toplevel
 import scipy.integrate
 import numpy as np
+from typing import Any, Union
 
 
 class IntegralWindow(Toplevel):
     '''Creates Toplevel window for integral and sum solutions'''
-    def __init__(self, startrange, endrange, n, fx):
+    def __init__(self, startrange: float, endrange: float, n: int, fx: str) -> None:
         Toplevel.__init__(self)
         #self.master =master
         self.title("Integral")
@@ -37,7 +38,7 @@ class IntegralWindow(Toplevel):
         self.integrate(startrange, endrange, n, fx)
         self.grid_layout()
 
-    def grid_layout(self):
+    def grid_layout(self) -> None:
         '''Grids labels'''
         self.integrate_label.grid(row=0, column=0)
         self.integrate_answer.grid(row=0, column=1)
@@ -51,7 +52,7 @@ class IntegralWindow(Toplevel):
         self.trpz_sum.grid(row=4, column=1)
 
 
-    def integrate(self, startrange, endrange, n, fx):
+    def integrate(self, startrange: float, endrange: float, n: int, fx: str) -> None:
         '''Calls riemann and trapezoid and does integration'''
         #self.function = eval("lambda x:{}".format(fx))
         self.function = eval(f"lambda x:{fx}")
@@ -68,11 +69,11 @@ class IntegralWindow(Toplevel):
         self.mr_sum['text'] = self.riemann(
             startrange+self.width/2, (self.endrange+self.width/2), n, fx, self.width)
 
-    def func(self, x, fx):
+    def func(self, x: float, fx: str) -> Union[int, float]:
         '''evaluates function at the given x value'''
         return eval(fx)
 
-    def riemann(self, startrange, endrange, N, fx, width):
+    def riemann(self, startrange: float, endrange: float, N: int, fx: str, width: float):
         '''returns sum of a given riemann given parameters'''
         points = np.linspace(startrange, endrange, num=N, endpoint=False)
         func_points = []
