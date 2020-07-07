@@ -2,7 +2,7 @@
 # TODO limit eval
 from tkinter import  Tk, ttk, StringVar, Label, W, EW, HORIZONTAL, IntVar
 from tkinter.ttk import Button, Checkbutton, Combobox, Entry
-from typing import Tuple, Union
+from typing import Iterable, Tuple, Union
 import graph
 import integral_window
 
@@ -101,7 +101,7 @@ class MainWindow():
             return False, []
         return True, [strt_val, end_val, n_val, fx]
 
-    def run_graph(self):
+    def run_graph(self) -> None:
         '''Grab input from tk.entrys'''
         is_good, argum = self.validate()
         if is_good:
@@ -110,7 +110,7 @@ class MainWindow():
             # error_var.set('Invalid Function')
         else:
             self.error_var.set("Invalid Parameter")
-    def run_calculate(self):
+    def run_calculate(self) -> None:
         '''Runs integral root'''
         is_good, argum = self.validate()
         if is_good:
@@ -138,7 +138,7 @@ class MainWindow():
         else:
             return True, strt_range
 
-    def val_end(self):
+    def val_end(self) -> Tuple[bool, Union[None,float]]:
         '''Retrieves endrange of function'''
         try:
             end_range = float(self.end_range_entry.get())
@@ -148,7 +148,7 @@ class MainWindow():
         else:
             return True, end_range
 
-    def val_n(self):
+    def val_n(self) -> Tuple[bool, Union[None, int]]:
         '''Retrieves and validates number of rectangles wanted'''
         try:
             n = int(self.n_entry.get())
