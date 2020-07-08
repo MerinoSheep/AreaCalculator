@@ -14,22 +14,22 @@ def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: bool, 
     rect_linewidth = 1
     x_vals = np.arange(float(start_range), end_range, .001)
     y_val_equation = []
-    x_val_sum = [] # Arrays for rectangles or trapezoids created
+    x_val_sum = []  # Arrays for rectangles or trapezoids created
     y_val_sum = []
 
-    def equation(x): # pylint: disable=unused-argument
+    def equation(x):  # pylint: disable=unused-argument
         return eval(fx)
-
 
     delta_x = (end_range-.1)-start_range
     rectangle_length = delta_x/N
+
     def is_in_bounds(gui):
-        for x in x_vals:  # stores the y values corresponding to the array of x values
+        for x in x_vals: # pylint: disable=unused-variable  # stores the y values corresponding to the array of x values
             try:
                 y_val_equation.append(eval(fx))
             except (NameError, SyntaxError):
                 gui.error_var.set("Function does not exist in range")
-                return False  # Allows main to show error
+                return False
         return True
     if is_in_bounds(gui):
         fig, ax = plt.subplots(nrows=1, ncols=1)
@@ -63,9 +63,10 @@ def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: bool, 
                 poly = patches.Polygon(xy=list(
                     zip(x, y)), fill=False, linewidth=rect_linewidth, edgecolor='r', facecolor='none')
                 current_axis.add_patch(poly)
+        #Does not graph asymptotes
         utol = 150.
         ltol = -150.
-        y_val_equation = np.array(y_val_equation)  ##TODO change this earlier
+        y_val_equation = np.array(y_val_equation)
         y_val_equation[y_val_equation > utol] = np.inf
         y_val_equation[y_val_equation < ltol] = -np.inf
         ax.grid(linewidth='.25')
