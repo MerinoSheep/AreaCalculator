@@ -2,9 +2,10 @@ from math import *  # pylint: disable=unused-wildcard-import disable=wildcard-im
 from math import log as ln  # pylint: disable=unused-import
 from math import log10 as log  # pylint: disable=unused-import
 from tkinter import Label, Toplevel
+from typing import Union
 import scipy.integrate
 import numpy as np
-from typing import Any, Union
+
 
 
 class IntegralWindow(Toplevel):

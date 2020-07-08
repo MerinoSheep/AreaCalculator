@@ -32,7 +32,7 @@ def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: bool, 
                 return False  # Allows main to show error
         return True
     if is_in_bounds(gui):
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(nrows=1, ncols=1)
         del fig
         current_axis = plt.gca()
         # Draws Rectangles
@@ -60,8 +60,9 @@ def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: bool, 
                 # BL,BR,TR, TL order of how nump draws the polygons
                 x = [i, i+rectangle_length, i+rectangle_length, i, ]
                 y = [0, 0, equation(i+rectangle_length), equation(i)]
-                current_axis.add_patch(patches.Polygon(xy=list(zip(
-                    x, y)), fill=False, linewidth=rect_linewidth, edgecolor='r', facecolor='none'))
+                poly = patches.Polygon(xy=list(
+                    zip(x, y)), fill=False, linewidth=rect_linewidth, edgecolor='r', facecolor='none')
+                current_axis.add_patch(poly)
         utol = 150.
         ltol = -150.
         y_val_equation = np.array(y_val_equation)  ##TODO change this earlier
