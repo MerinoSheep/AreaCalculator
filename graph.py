@@ -7,29 +7,24 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 import numexpr as ne
-import time
 
 def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: bool, RSUMTYPE: str, gui: object):
     """Starts graphing equation with sum"""
 
     rect_linewidth = 1
-    x_vals = np.arange(float(start_range), end_range+.0005, .001)#.001
-    arr_length = x_vals.size
-
-    #y_val_equation = np.zeros(arr_length)
-    #y_val_equation = []
+    x_vals = np.arange(start_range, end_range+.0005, .001)#.001
     def equation(x):  # pylint: disable=unused-argument
         return eval(fx)
 
     delta_x = (end_range)-start_range
     rectangle_length = delta_x/N
 
-    def is_in_bounds(gui) -> bool:
+    def is_in_bounds(gui: object) -> bool:
         global y_val_equation
         x = x_vals
         try:
             y_val_equation = ne.evaluate(fx)
-        except (NameError, SyntaxError):
+        except TypeError:
             gui.error_var.set("Function does not exist in range")
             return False
         return True
@@ -50,13 +45,13 @@ def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: bool, 
             elif RSUMTYPE == "Right":  # RIGHT RIEMANN SUMS
                 for i in np.arange(end_range, start_range, -(rectangle_length)):
                     current_axis.add_patch(patches.Rectangle(
-                        (i-(rectangle_length), 0), (rectangle_length), equation(i),
+                        (i-(rectangle_length), 0), rectangle_length, equation(i),
                         linewidth=rect_linewidth, edgecolor='r', facecolor='none'))
 
             elif RSUMTYPE == "Middle":  # MIDDLE RIEMANN SUMS
                 for i in np.arange(start_range+rectangle_length/2, end_range, rectangle_length):
                     current_axis.add_patch(patches.Rectangle(
-                        (i-(rectangle_length)/2, 0), (rectangle_length), equation(i),
+                        (i-(rectangle_length)/2, 0), rectangle_length, equation(i),
                         linewidth=rect_linewidth, edgecolor='r', facecolor='none'))
 
         elif drawtype is not None and not drawtype:  # TRAPEZOID
@@ -70,8 +65,8 @@ def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: bool, 
         # Does not graph asymptotes
         utol = 150.
         ltol = -150.
-        #y_val_equation[y_val_equation > utol] = np.inf
-        #y_val_equation[y_val_equation < ltol] = -np.inf
+        y_val_equation[y_val_equation > utol] = np.inf
+        y_val_equation[y_val_equation < ltol] = -np.inf
         ax.grid(linewidth='.25')
         ax.set_axisbelow(True)
         plt.plot(x_vals, y_val_equation)

@@ -20,7 +20,7 @@ class MainWindow():
         self.end_range_text = Label(self.master, text="End Range")
         self.n_text = Label(self.master, text="N")
         self.error_text = Label(
-            self.master, fg="red", textvariable=self.error_var, font='bold')
+            self.master, fg="red", textvariable=self.error_var, font=(None,12))
 
         # Initialize Labels to grid
         self.fx_text.grid(row=0, column=0)
@@ -32,15 +32,15 @@ class MainWindow():
         # Buttons
         self.graph_button = Button(
             self.master, text="Graph", command=self.run_graph)
-        self.graph_button.grid(row=4, column=3, pady=2)
+        self.graph_button.grid(row=4, column=1, pady=2)
         #Calculate Button
         self.calculate_button = Button(
             self.master, text="Calculate", command=self.run_calculate)
-        self.calculate_button.grid(row=4, column=1, pady=2)
+        self.calculate_button.grid(row=4, column=0, pady=2)
         #Settings Button
         self.settings_button = Button(
             self.master, text='Settings')
-        self.settings_button.grid(row=4, column=0)
+        self.settings_button.grid(row=5, column=0)
         # Text Entry Fields
         self.start_range_entry = Entry(self.master, validate="key")
         self.end_range_entry = Entry(self.master)
@@ -133,7 +133,7 @@ class MainWindow():
         try:
             strt_range = float(self.start_range_entry.get())
         except ValueError:
-            # self.error_var.set('Input a valid starting range')
+            #self.error_var.set('Input a valid starting range')
             return False, None
         else:
             return True, strt_range

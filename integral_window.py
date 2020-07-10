@@ -12,7 +12,6 @@ class IntegralWindow(Toplevel):
     '''Creates Toplevel window for integral and sum solutions'''
     def __init__(self, startrange: float, endrange: float, n: int, fx: str) -> None:
         Toplevel.__init__(self)
-        #self.master =master
         self.title("Integral")
         self.geometry("300x180")
         self.startrange = startrange
@@ -55,7 +54,6 @@ class IntegralWindow(Toplevel):
 
     def integrate(self, startrange: float, endrange: float, n: int, fx: str) -> None:
         '''Calls riemann and trapezoid and does integration'''
-        #self.function = eval("lambda x:{}".format(fx))
         self.function = eval(f"lambda x:{fx}")
         self.i = scipy.integrate.quad(
             self.function, self.startrange, self.endrange)
