@@ -159,7 +159,10 @@ class MainWindow():
 
     def val_fx(self) -> Tuple[bool, str]:
         '''retrieve function'''
-        temp_fx = self.fx_entry.get().lower().replace("^", "**")
+        temp_fx = self.fx_entry.get().lower()
+        temp_fx = temp_fx.replace("^", "**")
+        temp_fx = temp_fx.replace("log","log10")
+        temp_fx = temp_fx.replace("ln", "log")
         fx = ''
         for i in range(0, len(temp_fx)-1):
             fx += temp_fx[i]
