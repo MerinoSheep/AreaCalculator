@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 import numexpr as ne
-
+import configparser
 def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: bool, RSUMTYPE: str, gui: object):
     """Starts graphing equation with sum"""
 
@@ -63,7 +63,7 @@ def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: bool, 
                     zip(x, y)), fill=False, linewidth=linewidth, edgecolor='r', facecolor='none')
                 current_axis.add_patch(poly)
         # Does not graph asymptotes
-        utol = 150.
+        utol =  150.
         ltol = -150.
         y_val_equation[y_val_equation > utol] = np.inf
         y_val_equation[y_val_equation < ltol] = -np.inf
@@ -72,6 +72,13 @@ def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: bool, 
         plt.plot(x_vals, y_val_equation)
         plt.ylabel('y values')
         plt.xlabel('x values')
+        config = configparser.ConfigParser()
+        config.read('config.ini')
+        if not config.getboolean('Y Limits', 'use_auto_values'):
+            if config.get('Y Limits', 'y_max') != "None":
+                plt.ylim(top=config.getfloat('Y Limits', 'y_max'))
+            if config.get('Y Limits', 'y_min') != "None":
+                plt.ylim(bottom=config.getfloat('Y Limits', 'y_min' ))
         plt.show()
 
 
