@@ -1,7 +1,7 @@
 '''main.py'''
 # TODO limit eval
-from tkinter import Tk, ttk, StringVar, Label, W, EW, HORIZONTAL, IntVar
-from tkinter.ttk import Button, Checkbutton, Combobox, Entry
+from tkinter import BooleanVar,  Tk, ttk, StringVar, Label, W, EW, HORIZONTAL, IntVar
+from tkinter.ttk import Button, Checkbutton, Combobox,Radiobutton, Entry
 from typing import Iterable, Tuple, Union
 import graph
 import integral_window
@@ -46,12 +46,12 @@ class MainWindow():
         self.menu = Combobox(self.master, textvariable=self.splash, values=[
             "Left", "Right", "Middle"], state="readonly", width=22)
         # CheckButton
-        self.check_var_1 = IntVar()
-        self.check_var_2 = IntVar()
-        self.is_riemann_check_box = Checkbutton(
-            self.master, text="Riemann", variable=self.check_var_1, command=self.is_riemann_check)
-        self.is_trapezoid_check_box = Checkbutton(
-            self.master, text="Trapezoid", variable=self.check_var_2, command=self.is_trapezoid_check)
+
+        self.tk_int_var = IntVar()
+        self.is_riemann_check_box = Radiobutton(
+            self.master, text="Riemann",value=0, variable=self.tk_int_var, command=self.radio_selection)
+        self.is_trapezoid_check_box = Radiobutton(
+            self.master, text="Trapezoid",value=1, variable=self.tk_int_var, command=self.radio_selection)
         # Breakline
         self.break_line = ttk.Separator(orient=HORIZONTAL)
         self.grid_gui()
@@ -78,8 +78,8 @@ class MainWindow():
         self.break_line.grid(row=2, column=3, sticky=EW, pady=2, padx=(4, 5))
     def validate(self):
         '''Grab input from tk.entrys'''
-        status_s, strt_val = self.val_strt()  # statuses are a boolean return
-        status_e, end_val = self.val_end()
+        status_s, strt_val = self.val_float(self.start_range_entry)  # statuses are a boolean return
+        status_e, end_val = self.val_float(self.end_range_entry)
         status_n, n_val = self.val_n()
         status_fx, fx = self.val_fx()
         if not status_s:
@@ -105,8 +105,14 @@ class MainWindow():
         if is_good:
             self.error_var.set('')
             graph.draw(*argum, self.draw_type, self.menu.get(), self)  # pylint: disable=no-value-for-parameter
-        else:
-            self.error_var.set("Invalid Parameter")
+    def radio_selection(self):
+        selection = self.tk_int_var.get()
+        if selection == 0:
+            self.draw_type = True
+            self.menu.state(['!disabled'])
+        elif selection == 1:
+            self.draw_type = False
+            self.menu.state(['disabled'])
 
     def run_calculate(self) -> None:
         '''Runs integral root'''
@@ -114,35 +120,14 @@ class MainWindow():
         if is_good:
             integral_window.IntegralWindow(*argum)  # pylint: disable=no-value-for-parameter
 
-    def is_riemann_check(self) -> None:
-        '''Reverses the menu disabled from is_trapezoid_check()'''
-        self.draw_type = True
-        self.menu.state(['!disabled'])
-        self.is_trapezoid_check_box.state(['!selected'])
-
-    def is_trapezoid_check(self) -> None:
-        ''' disables the Riemann sum menu because Trapezoids only have one state'''
-        self.draw_type = False
-        self.menu.state(['disabled'])
-        self.is_riemann_check_box.state(['!selected'])
-
-    def val_strt(self) -> Tuple[bool, Union[None, float]]:
-        '''Does some simple checks before returning a boolean'''
+    def val_float(self, entry):
+        '''checks for entry'''
         try:
-            strt_range = float(self.start_range_entry.get())
+            value = float(entry.get())
         except ValueError:
             return False, None
         else:
-            return True, strt_range
-
-    def val_end(self) -> Tuple[bool, Union[None, float]]:
-        '''Retrieves endrange of function'''
-        try:
-            end_range = float(self.end_range_entry.get())
-        except ValueError:
-            return False, None
-        else:
-            return True, end_range
+            return True, value
 
     def val_n(self) -> Tuple[bool, Union[None, int]]:
         '''Retrieves and validates number of rectangles wanted'''
@@ -169,7 +154,6 @@ class MainWindow():
         fx += temp_fx[-1]
         return True, fx
 
-
 def open_settings():
     '''open settings window'''
     window = settingswindow.SettingsWindow()
@@ -177,14 +161,12 @@ def open_settings():
     window.load_settings()
     window.grid_gui()
 
-
 def test_val(in_str: str, acttyp: str) -> bool:
     '''Forces an integer input on n input'''
     if acttyp == '1':  # insert
         if not in_str.isdigit():
             return False
     return True
-
 
 if __name__ == "__main__":
     root = Tk()

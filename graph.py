@@ -1,13 +1,12 @@
 '''graph.py'''
 
 from math import *  # pylint: disable=unused-wildcard-import disable=wildcard-import
-#from math import log as ln  # pylint: disable=unused-import
-#from math import log10 as log  # pylint: disable=unused-import
+import configparser
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 import numexpr as ne
-import configparser
+
 def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: bool, RSUMTYPE: str, gui: object):
     """Starts graphing equation with sum"""
 
@@ -18,7 +17,6 @@ def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: bool, 
 
     delta_x = (end_range)-start_range
     rectangle_length = delta_x/N
-
     def is_in_bounds(gui: object) -> bool:
         global y_val_equation
         x = x_vals
