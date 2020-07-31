@@ -1,12 +1,13 @@
 '''main.py'''
 # TODO limit eval
-from tkinter import BooleanVar,  Tk, ttk, StringVar, Label, W, EW, HORIZONTAL, IntVar
-from tkinter.ttk import Button, Checkbutton, Combobox,Radiobutton, Entry
-from typing import Iterable, Tuple, Union
+from tkinter import Tk, ttk, StringVar, Label, W, EW, HORIZONTAL, IntVar
+from tkinter.ttk import Button, Combobox, Radiobutton, Entry
+from typing import Tuple, Union
 import graph
 import integral_window
 import settingswindow
-
+import vcmdtk
+from vcmdtk import test_int
 
 class MainWindow():
     '''Parent window'''
@@ -16,6 +17,7 @@ class MainWindow():
         self.error_var = StringVar()
         self.draw_type = None
         self.master.title('Area Calculator')
+        val_float = (self.master.register(vcmdtk.test_float),'%d', '%S', '%s')
         # Labels
         self.fx_text = Label(self.master, text="Function")
         self.start_range_text = Label(self.master, text="Start Range")
@@ -31,15 +33,14 @@ class MainWindow():
             self.master, text="Calculate", command=self.run_calculate)
         # Settings Button
         self.settings_button = Button(
-            self.master, text='Settings', command=open_settings)
+            self.master, text='Settings', command=lambda:settingswindow.SettingsWindow())
         # Help Button
         self.help_button = Button(self.master, text='Help')
         # Text Entry Fields
-        self.start_range_entry = Entry(self.master, validate="key")
-        self.end_range_entry = Entry(self.master)
-        self.n_entry = Entry(self.master, validate="key")
-        self.n_entry['validatecommand'] = (
-            self.n_entry.register(test_val), '%P', '%d')
+        self.start_range_entry = Entry(self.master, validate="key", validatecommand=val_float)
+        self.end_range_entry = Entry(self.master, validate="key", validatecommand=val_float)
+        self.n_entry = Entry(self.master, validate='key', validatecommand=(self.master.register(vcmdtk.test_int), '%d', '%S'))
+
         self.fx_entry = Entry(self.master)
         self.splash = StringVar(self.master)
         self.splash.set('Riemman Draw Location')
@@ -49,14 +50,15 @@ class MainWindow():
 
         self.tk_int_var = IntVar()
         self.is_riemann_check_box = Radiobutton(
-            self.master, text="Riemann",value=0, variable=self.tk_int_var, command=self.radio_selection)
+            self.master, text="Riemann", value=0, variable=self.tk_int_var, command=self.radio_selection)
         self.is_trapezoid_check_box = Radiobutton(
-            self.master, text="Trapezoid",value=1, variable=self.tk_int_var, command=self.radio_selection)
+            self.master, text="Trapezoid", value=1, variable=self.tk_int_var, command=self.radio_selection)
         # Breakline
         self.break_line = ttk.Separator(orient=HORIZONTAL)
         self.grid_gui()
 
     def grid_gui(self):
+        '''grids widgets'''
         self.calculate_button.grid(row=4, column=0, pady=2)
         self.graph_button.grid(row=4, column=1, pady=2, sticky=W)
         self.fx_text.grid(row=0, column=0)
@@ -98,14 +100,14 @@ class MainWindow():
             self.error_var.set("Invalid Range")
             return False, []
         return True, [strt_val, end_val, n_val, fx]
-
     def run_graph(self) -> None:
         '''Grab input from tk.entrys'''
         is_good, argum = self.validate()
         if is_good:
             self.error_var.set('')
             graph.draw(*argum, self.draw_type, self.menu.get(), self)  # pylint: disable=no-value-for-parameter
-    def radio_selection(self):
+    def radio_selection(self) -> None:
+        '''switches state of draw_type and combobox'''
         selection = self.tk_int_var.get()
         if selection == 0:
             self.draw_type = True
@@ -138,6 +140,7 @@ class MainWindow():
         else:
             return True, n
 
+
     def val_fx(self) -> Tuple[bool, str]:
         '''retrieve function'''
         temp_fx = self.fx_entry.get().lower()
@@ -153,21 +156,6 @@ class MainWindow():
                 fx += '*'
         fx += temp_fx[-1]
         return True, fx
-
-def open_settings():
-    '''open settings window'''
-    window = settingswindow.SettingsWindow()
-    window.create_gui()
-    window.load_settings()
-    window.grid_gui()
-
-def test_val(in_str: str, acttyp: str) -> bool:
-    '''Forces an integer input on n input'''
-    if acttyp == '1':  # insert
-        if not in_str.isdigit():
-            return False
-    return True
-
 if __name__ == "__main__":
     root = Tk()
     main_window = MainWindow(root)

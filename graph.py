@@ -76,7 +76,7 @@ def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: bool, 
             if config.get('Y Limits', 'y_max') != "None":
                 plt.ylim(top=config.getfloat('Y Limits', 'y_max'))
             if config.get('Y Limits', 'y_min') != "None":
-                plt.ylim(bottom=config.getfloat('Y Limits', 'y_min' ))
+                plt.ylim(bottom=config.getfloat('Y Limits', 'y_min'))
         plt.show()
 
 
