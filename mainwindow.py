@@ -7,7 +7,6 @@ import graph
 import integral_window
 import settingswindow
 import vcmdtk
-from vcmdtk import test_int
 
 class MainWindow():
     '''Parent window'''
@@ -17,7 +16,7 @@ class MainWindow():
         self.error_var = StringVar()
         self.draw_type = None
         self.master.title('Area Calculator')
-        val_float = (self.master.register(vcmdtk.test_float),'%d', '%S', '%s')
+        val_float_cmd = (self.master.register(vcmdtk.test_float),'%d', '%S', '%s')
         # Labels
         self.fx_text = Label(self.master, text="Function")
         self.start_range_text = Label(self.master, text="Start Range")
@@ -37,8 +36,8 @@ class MainWindow():
         # Help Button
         self.help_button = Button(self.master, text='Help')
         # Text Entry Fields
-        self.start_range_entry = Entry(self.master, validate="key", validatecommand=val_float)
-        self.end_range_entry = Entry(self.master, validate="key", validatecommand=val_float)
+        self.start_range_entry = Entry(self.master, validate="key", validatecommand=val_float_cmd)
+        self.end_range_entry = Entry(self.master, validate="key", validatecommand=val_float_cmd)
         self.n_entry = Entry(self.master, validate='key', validatecommand=(self.master.register(vcmdtk.test_int), '%d', '%S'))
 
         self.fx_entry = Entry(self.master)
@@ -80,8 +79,8 @@ class MainWindow():
         self.break_line.grid(row=2, column=3, sticky=EW, pady=2, padx=(4, 5))
     def validate(self):
         '''Grab input from tk.entrys'''
-        status_s, strt_val = self.val_float(self.start_range_entry)  # statuses are a boolean return
-        status_e, end_val = self.val_float(self.end_range_entry)
+        status_s, strt_val = self.val_float(self.start_range_entry.get())  # statuses are a boolean return
+        status_e, end_val = self.val_float(self.end_range_entry.get())
         status_n, n_val = self.val_n()
         status_fx, fx = self.val_fx()
         if not status_s:
@@ -100,12 +99,14 @@ class MainWindow():
             self.error_var.set("Invalid Range")
             return False, []
         return True, [strt_val, end_val, n_val, fx]
+
     def run_graph(self) -> None:
         '''Grab input from tk.entrys'''
         is_good, argum = self.validate()
         if is_good:
             self.error_var.set('')
             graph.draw(*argum, self.draw_type, self.menu.get(), self)  # pylint: disable=no-value-for-parameter
+
     def radio_selection(self) -> None:
         '''switches state of draw_type and combobox'''
         selection = self.tk_int_var.get()
@@ -122,33 +123,26 @@ class MainWindow():
         if is_good:
             integral_window.IntegralWindow(*argum)  # pylint: disable=no-value-for-parameter
 
-    def val_float(self, entry):
+    def val_float(self, entry:str):
         '''checks for entry'''
-        try:
-            value = float(entry.get())
-        except ValueError:
-            return False, None
+        if entry:
+            return True, float(entry)
         else:
-            return True, value
+            return False, None
 
     def val_n(self) -> Tuple[bool, Union[None, int]]:
         '''Retrieves and validates number of rectangles wanted'''
-        try:
-            n = int(self.n_entry.get())
-        except ValueError:
-            return False, None
+        if self.n_entry.get():
+            return True, int(self.n_entry.get())
         else:
-            return True, n
-
+            return False, None
 
     def val_fx(self) -> Tuple[bool, str]:
         '''retrieve function'''
         temp_fx = self.fx_entry.get().lower()
         if temp_fx == '':
             return False, temp_fx
-        temp_fx = temp_fx.replace("^", "**")
-        temp_fx = temp_fx.replace("log", "log10")
-        temp_fx = temp_fx.replace("ln", "log")
+        temp_fx = temp_fx.replace("^", "**").replace("log", "log10").replace("ln", "log")
         fx = ''
         for i in range(0, len(temp_fx)-1):
             fx += temp_fx[i]
