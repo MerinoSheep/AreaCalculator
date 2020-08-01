@@ -1,7 +1,7 @@
 from tkinter import BooleanVar, Toplevel, W
 from tkinter.ttk import Entry, Label, Checkbutton, Button
 import configparser
-
+import vcmdtk
 
 class SettingsWindow(Toplevel):
     def __init__(self) -> None:
@@ -10,17 +10,19 @@ class SettingsWindow(Toplevel):
         #self.geometry("300x180")
         self.config = configparser.ConfigParser()
         self.config.read('config.ini')
+        self.val_int_cmd = (self.register(vcmdtk.test_int),'%d', '%S')
         self.create_gui()
         self.load_settings()
         self.grid_gui()
 
     def create_gui(self):
         #Label
+
         self.y_max_label = Label(self, text='Y max')
         self.y_min_label = Label(self, text='Y min')
         #Entry
-        self.y_max_entry = Entry(self)
-        self.y_min_entry = Entry(self)
+        self.y_max_entry = Entry(self, validate='key',validatecommand=self.val_int_cmd)
+        self.y_min_entry = Entry(self, validate='key', validatecommand=self.val_int_cmd)
         #Check buttons
         self.check_var_1 = BooleanVar()
         self.check_var_1.set(self.config.getboolean('Y Limits', 'use_auto_values'))
