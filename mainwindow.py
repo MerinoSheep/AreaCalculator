@@ -14,7 +14,7 @@ class MainWindow():
     def __init__(self, master: Tk):  # TODO CLEAN INIT
         self.master = master
         self.error_var = StringVar()
-        self.draw_type = None
+        self.draw_type = True # Defaults to Riemann Sum
         self.master.title('Area Calculator')
         val_float_cmd = (self.master.register(vcmdtk.test_float),'%d', '%S', '%s')
         # Labels
@@ -47,7 +47,7 @@ class MainWindow():
             "Left", "Right", "Middle"], state="readonly", width=22)
         # CheckButton
 
-        self.tk_int_var = IntVar()
+        self.tk_int_var = IntVar(value=0)
         self.is_riemann_check_box = Radiobutton(
             self.master, text="Riemann", value=0, variable=self.tk_int_var, command=self.radio_selection)
         self.is_trapezoid_check_box = Radiobutton(
@@ -58,25 +58,26 @@ class MainWindow():
 
     def grid_gui(self):
         '''grids widgets'''
+        self.fx_text.grid(row=0, column=0)
+        self.is_riemann_check_box.grid(
+            row=0, column=3, sticky=W, pady=2, padx=(4, 0),columnspan=2)
+        self.fx_entry.grid(row=0, column=1, sticky=W, pady=2)
+        self.start_range_text.grid(row=1, column=0)
+        self.start_range_entry.grid(row=1, column=1, sticky=W, pady=2)
+        self.is_trapezoid_check_box.grid(
+            row=1, column=3, sticky=W, pady=2, padx=(4, 0))
+        self.end_range_text.grid(row=2, column=0)
+        self.end_range_entry.grid(row=2, column=1, stick=W, pady=2)
+        self.break_line.grid(row=2, column=3, sticky=EW, pady=2, padx=(4, 5))
+        self.n_text.grid(row=3, column=0)
+        self.n_entry.grid(row=3, column=1, stick=W, pady=2)
+        self.menu.grid(row=3, column=3, sticky=EW, pady=2, padx=(4, 2))
         self.calculate_button.grid(row=4, column=0, pady=2)
         self.graph_button.grid(row=4, column=1, pady=2, sticky=W)
-        self.fx_text.grid(row=0, column=0)
-        self.start_range_text.grid(row=1, column=0)
-        self.end_range_text.grid(row=2, column=0)
-        self.n_text.grid(row=3, column=0)
         self.error_text.grid(row=4, column=3)
         self.settings_button.grid(row=5, column=0)
         self.help_button.grid(row=5, column=1, sticky=W, pady=2)
-        self.fx_entry.grid(row=0, column=1, sticky=W, pady=2)
-        self.start_range_entry.grid(row=1, column=1, sticky=W, pady=2)
-        self.end_range_entry.grid(row=2, column=1, stick=W, pady=2)
-        self.n_entry.grid(row=3, column=1, stick=W, pady=2)
-        self.menu.grid(row=3, column=3, sticky=EW, pady=2, padx=(4, 2))
-        self.is_riemann_check_box.grid(
-            row=0, column=3, sticky=W, pady=2, padx=(4, 0))
-        self.is_trapezoid_check_box.grid(
-            row=1, column=3, sticky=W, pady=2, padx=(4, 0))
-        self.break_line.grid(row=2, column=3, sticky=EW, pady=2, padx=(4, 5))
+
     def validate(self):
         '''Grab input from tk.entrys'''
         status_s, strt_val = self.val_float(self.start_range_entry.get())  # statuses are a boolean return
