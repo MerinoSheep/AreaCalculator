@@ -1,6 +1,6 @@
 '''main.py'''
 # TODO limit eval
-from tkinter import Tk, ttk, StringVar, Label, W, EW, HORIZONTAL, IntVar
+from tkinter import Tk, ttk, StringVar, Label, W, EW, E, HORIZONTAL, IntVar
 from tkinter.ttk import Button, Combobox, Radiobutton, Entry
 from typing import Tuple, Union
 import graph
@@ -14,7 +14,6 @@ class MainWindow():
     def __init__(self, master: Tk):  # TODO CLEAN INIT
         self.master = master
         self.error_var = StringVar()
-        self.draw_type = True # Defaults to Riemann Sum
         self.master.title('Area Calculator')
         val_float_cmd = (self.master.register(vcmdtk.test_float),'%d', '%S', '%s')
         # Labels
@@ -32,7 +31,7 @@ class MainWindow():
             self.master, text="Calculate", command=self.run_calculate)
         # Settings Button
         self.settings_button = Button(
-            self.master, text='Settings', command=lambda:settingswindow.SettingsWindow())
+            self.master, text='Settings', command=lambda: settingswindow.SettingsWindow())
         # Help Button
         self.help_button = Button(self.master, text='Help')
         # Text Entry Fields
@@ -45,13 +44,13 @@ class MainWindow():
         self.splash.set('Riemman Draw Location')
         self.menu = Combobox(self.master, textvariable=self.splash, values=[
             "Left", "Right", "Middle"], state="readonly", width=22)
-        # CheckButton
-
-        self.tk_int_var = IntVar(value=0)
+        # CheckButton (radiobutton)
+        self.tk_int_var = IntVar(value=2)
         self.is_riemann_check_box = Radiobutton(
             self.master, text="Riemann", value=0, variable=self.tk_int_var, command=self.radio_selection)
         self.is_trapezoid_check_box = Radiobutton(
             self.master, text="Trapezoid", value=1, variable=self.tk_int_var, command=self.radio_selection)
+        self.only_graph_radio = Radiobutton(self.master, text='Only Graph', value=2, variable=self.tk_int_var, command=self.radio_selection)
         # Breakline
         self.break_line = ttk.Separator(orient=HORIZONTAL)
         self.grid_gui()
@@ -60,12 +59,13 @@ class MainWindow():
         '''grids widgets'''
         self.fx_text.grid(row=0, column=0)
         self.is_riemann_check_box.grid(
-            row=0, column=3, sticky=W, pady=2, padx=(4, 0),columnspan=2)
+            row=0, column=3, sticky=W, pady=2, padx=(4, 0))
         self.fx_entry.grid(row=0, column=1, sticky=W, pady=2)
+        self.only_graph_radio.grid(row=0, column=3,sticky=E)
         self.start_range_text.grid(row=1, column=0)
         self.start_range_entry.grid(row=1, column=1, sticky=W, pady=2)
         self.is_trapezoid_check_box.grid(
-            row=1, column=3, sticky=W, pady=2, padx=(4, 0))
+            row=1, column=3, sticky=W, pady=2, padx=(4, 0), columnspan=2)
         self.end_range_text.grid(row=2, column=0)
         self.end_range_entry.grid(row=2, column=1, stick=W, pady=2)
         self.break_line.grid(row=2, column=3, sticky=EW, pady=2, padx=(4, 5))
@@ -76,7 +76,7 @@ class MainWindow():
         self.graph_button.grid(row=4, column=1, pady=2, sticky=W)
         self.error_text.grid(row=4, column=3)
         self.settings_button.grid(row=5, column=0)
-        self.help_button.grid(row=5, column=1, sticky=W, pady=2)
+        #self.help_button.grid(row=5, column=1, sticky=W, pady=2)
 
     def validate(self):
         '''Grab input from tk.entrys'''
@@ -106,16 +106,16 @@ class MainWindow():
         is_good, argum = self.validate()
         if is_good:
             self.error_var.set('')
-            graph.draw(*argum, self.draw_type, self.menu.get(), self)  # pylint: disable=no-value-for-parameter
-
+            try:
+                graph.draw(*argum, self.tk_int_var.get(), self.menu.get())  # pylint: disable=no-value-for-parameter
+            except  ValueError:
+                self.error_var.set("Function does not exist in range")
     def radio_selection(self) -> None:
         '''switches state of draw_type and combobox'''
         selection = self.tk_int_var.get()
         if selection == 0:
-            self.draw_type = True
             self.menu.state(['!disabled'])
-        elif selection == 1:
-            self.draw_type = False
+        elif selection > 0: # Riemann(selection 0 ) is the only one that needs the combobox
             self.menu.state(['disabled'])
 
     def run_calculate(self) -> None:
@@ -124,7 +124,7 @@ class MainWindow():
         if is_good:
             integral_window.IntegralWindow(*argum)  # pylint: disable=no-value-for-parameter
 
-    def val_float(self, entry:str):
+    def val_float(self, entry:str)-> Tuple[bool, Union[None, int]]:
         '''checks for entry'''
         if entry:
             return True, float(entry)
@@ -148,7 +148,7 @@ class MainWindow():
         for i in range(0, len(temp_fx)-1):
             fx += temp_fx[i]
             if temp_fx[i].isdigit() and (temp_fx[i+1] == 'x' or temp_fx[i+1] == '(' or temp_fx[i+1].isalpha()):
-                fx += '*'
+                fx += '*' #5x -> 5*x which python can evaluate
         fx += temp_fx[-1]
         return True, fx
 if __name__ == "__main__":
