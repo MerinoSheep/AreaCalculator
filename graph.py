@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 import numexpr as ne
-
 def draw(start_range: float, end_range: float, N: int, fx: str, drawtype: int, RSUMTYPE: str):
     """Starts graphing equation with sum"""
 
