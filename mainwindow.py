@@ -1,4 +1,4 @@
-'''main.py'''
+# Run main.py to start the program
 # TODO limit eval
 from tkinter import Tk, ttk, StringVar, Label, W, EW, E, HORIZONTAL, IntVar
 from tkinter.ttk import Button, Combobox, Radiobutton, Entry
@@ -11,11 +11,11 @@ import vcmdtk
 class MainWindow():
     '''Parent window'''
 
-    def __init__(self, master: Tk):  # TODO CLEAN INIT
+    def __init__(self, master: Tk):
         self.master = master
         self.error_var = StringVar()
         self.master.title('Area Calculator')
-        val_float_cmd = (self.master.register(vcmdtk.test_float),'%d', '%S', '%s')
+        val_float_cmd = (self.master.register(vcmdtk.test_float), '%d', '%S', '%s')
         # Labels
         self.fx_text = Label(self.master, text="Function")
         self.start_range_text = Label(self.master, text="Start Range")
@@ -110,6 +110,7 @@ class MainWindow():
                 graph.draw(*argum, self.tk_int_var.get(), self.menu.get())  # pylint: disable=no-value-for-parameter
             except  ValueError:
                 self.error_var.set("Function does not exist in range")
+                
     def radio_selection(self) -> None:
         '''switches state of draw_type and combobox'''
         selection = self.tk_int_var.get()
@@ -124,7 +125,7 @@ class MainWindow():
         if is_good:
             integral_window.IntegralWindow(*argum)  # pylint: disable=no-value-for-parameter
 
-    def val_float(self, entry:str)-> Tuple[bool, Union[None, int]]:
+    def val_float(self, entry:str)-> Tuple[bool, Union[None, float]]:
         '''checks for entry'''
         if entry:
             return True, float(entry)
@@ -137,7 +138,6 @@ class MainWindow():
             return True, int(self.n_entry.get())
         else:
             return False, None
-
     def val_fx(self) -> Tuple[bool, str]:
         '''retrieve function'''
         temp_fx = self.fx_entry.get().lower()
