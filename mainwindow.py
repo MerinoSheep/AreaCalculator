@@ -7,6 +7,7 @@ import graph
 import integral_window
 import settingswindow
 import vcmdtk
+import sv_ttk
 
 class MainWindow():
     '''Parent window'''
@@ -15,6 +16,7 @@ class MainWindow():
         self.master = master
         self.error_var = StringVar()
         self.master.title('Area Calculator')
+        sv_ttk.set_theme("dark")
         val_float_cmd = (self.master.register(vcmdtk.test_float), '%d', '%S', '%s')
         # Labels
         self.fx_text = Label(self.master, text="Function")
@@ -86,31 +88,31 @@ class MainWindow():
         status_fx, fx = self.val_fx()
         if not status_s:
             self.error_var.set('Invalid Start Range')
-            return False, []
+            return None
         elif not status_e:
             self.error_var.set('Invalid End Range')
-            return False, []
+            return None
         elif not status_n:
             self.error_var.set("Invalid N")
-            return False, []
+            return None
         elif not status_fx:
             self.error_var.set("Invalid Function")
-            return False, []
+            return None
         elif int(self.start_range_entry.get()) > int(self.end_range_entry.get()):
             self.error_var.set("Invalid Range")
-            return False, []
-        return True, [strt_val, end_val, n_val, fx]
+            return None
+        return [strt_val, end_val, n_val, fx]
 
     def run_graph(self) -> None:
         '''Grab input from tk.entrys'''
-        is_good, argum = self.validate()
-        if is_good:
+        argum = self.validate()
+        if argum:
             self.error_var.set('')
             try:
                 graph.draw(*argum, self.tk_int_var.get(), self.menu.get())  # pylint: disable=no-value-for-parameter
             except  ValueError:
                 self.error_var.set("Function does not exist in range")
-                
+
     def radio_selection(self) -> None:
         '''switches state of draw_type and combobox'''
         selection = self.tk_int_var.get()
@@ -121,8 +123,8 @@ class MainWindow():
 
     def run_calculate(self) -> None:
         '''Runs integral root'''
-        is_good, argum = self.validate()
-        if is_good:
+        argum = self.validate()
+        if argum:
             integral_window.IntegralWindow(*argum)  # pylint: disable=no-value-for-parameter
 
     def val_float(self, entry:str)-> Tuple[bool, Union[None, float]]:
